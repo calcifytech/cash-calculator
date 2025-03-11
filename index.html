@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Cash Calculator</title>
+  <style>
+    /* Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #2A2F4F, #917FB3);
+      color: #FDE2F3;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated Background Elements */
+    .deco-circle {
+      position: absolute;
+      background: rgba(229, 190, 236, 0.1);
+      border-radius: 50%;
+      animation: float 6s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+
+    /* Main Container */
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      position: relative;
+      z-index: 1;
+      transform-style: preserve-3d;
+      animation: containerEntrance 1s ease-out;
+    }
+
+    @keyframes containerEntrance {
+      from { transform: translateY(50px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #FFD700; /* Gold color for heading */
+      font-size: 2.5em;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      letter-spacing: 1px;
+    }
+
+    /* Input Group Styling */
+    .input-group {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      margin-bottom: 25px;
+    }
+
+    .input-box {
+      position: relative;
+    }
+
+    .input-box label {
+      display: block;
+      margin-bottom: 8px;
+      color: #E5BEEC;
+      font-size: 0.9em;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #2A2F4F;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #FFD700, 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Button Styling */
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+
+    button {
+      flex: 1;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, #FFD700, #FFA500); /* Gold to Orange gradient */
+      color: #2A2F4F;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      background: linear-gradient(135deg, #FFA500, #FFD700);
+    }
+
+    /* Results Section */
+    .results {
+      margin-top: 30px;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      animation: resultAppear 0.5s ease-out;
+      color: #FFD700; /* Gold color for result text */
+      font-weight: bold;
+    }
+
+    @keyframes resultAppear {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* History Section */
+    .history {
+      margin-top: 30px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .history-item {
+      padding: 12px;
+      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      animation: historyEntry 0.5s ease-out;
+      color: #E5BEEC;
+    }
+
+    @keyframes historyEntry {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* How-to Section */
+    .how-to-use {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      position: relative;
+    }
+
+    .how-to-use h3 {
+      color: #FFD700; /* Gold color for heading */
+      margin-bottom: 15px;
+    }
+
+    .how-to-use ol {
+      padding-left: 20px;
+    }
+
+    .how-to-use li {
+      margin-bottom: 10px;
+      line-height: 1.6;
+      color: #E5BEEC;
+    }
+
+    /* Currency Symbol Animation */
+    .currency-symbol {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #FFD700; /* Gold color for currency symbol */
+      font-weight: bold;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated background elements -->
+  <div class="deco-circle" style="width: 150px; height: 150px; top: -50px; left: -50px; animation-delay: 0s"></div>
+  <div class="deco-circle" style="width: 100px; height: 100px; bottom: -30px; right: -30px; animation-delay: 2s"></div>
+
+  <div class="container">
+    <h1>💰 Ultimate Cash Calculator</h1>
+
+    <div class="input-group">
+      <div class="input-box">
+        <label>Total Amount</label>
+        <input type="number" id="amount" placeholder="Enter amount" step="0.01">
+        <span class="currency-symbol" id="dynamicSymbol">₹</span>
+      </div>
+      <div class="input-box">
+        <label>Tax Rate (%)</label>
+        <input type="number" id="tax" placeholder="Enter tax rate" step="0.1">
+      </div>
+      <div class="input-box">
+        <label>Currency</label>
+        <select id="currency" onchange="updateCurrencySymbol()">
+          <option value="INR">Indian Rupee (₹)</option>
+          <option value="USD">US Dollar ($)</option>
+          <option value="EUR">Euro (€)</option>
+          <option value="GBP">British Pound (£)</option>
+          <option value="JPY">Japanese Yen (¥)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button onclick="calculate()">📊 Calculate</button>
+      <button onclick="resetForm()">🔄 Reset</button>
+    </div>
+
+    <div class="results">
+      <div class="result-item">
+        <span>Gross Amount:</span>
+        <span id="grossAmount">-</span>
+      </div>
+      <div class="result-item">
+        <span>Tax Deducted:</span>
+        <span id="taxAmount">-</span>
+      </div>
+      <div class="result-item" style="background: rgba(255, 215, 0, 0.2);">
+        <span><strong>Net Amount:</strong></span>
+        <span id="netAmount"><strong>-</strong></span>
+      </div>
+    </div>
+
+    <div class="history">
+      <h3>📚 Calculation History</h3>
+      <div id="historyList"></div>
+    </div>
+
+    <div class="how-to-use">
+      <h3>📖 How to Use</h3>
+      <ol>
+        <li>Enter the total amount in the first field</li>
+        <li>Input applicable tax rate percentage</li>
+        <li>Select your preferred currency</li>
+        <li>Click Calculate to see detailed breakdown</li>
+        <li>Use Reset to start fresh calculations</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    let history = [];
+    const currencySymbols = { INR: '₹', USD: '$', EUR: '€', GBP: '£', JPY: '¥' };
+
+    function updateCurrencySymbol() {
+      const currency = document.getElementById('currency').value;
+      document.getElementById('dynamicSymbol').textContent = currencySymbols[currency];
+    }
+
+    function formatCurrency(amount, currency) {
+      return `${currencySymbols[currency]} ${amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    }
+
+    function calculate() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const taxRate = parseFloat(document.getElementById('tax').value) || 0;
+      const currency = document.getElementById('currency').value;
+      
+      if (!amount) {
+        alert('Please enter a valid amount');
+        return;
+      }
+
+      const taxAmount = amount * (taxRate / 100);
+      const netAmount = amount - taxAmount;
+
+      document.getElementById('grossAmount').textContent = formatCurrency(amount, currency);
+      document.getElementById('taxAmount').textContent = `${formatCurrency(taxAmount, currency)} (${taxRate}%)`;
+      document.getElementById('netAmount').innerHTML = `<strong>${formatCurrency(netAmount, currency)}</strong>`;
+
+      // Add to history
+      const historyEntry = {
+        date: new Date().toLocaleString(),
+        gross: amount,
+        tax: taxAmount,
+        net: netAmount,
+        currency: currency
+      };
+
+      history.unshift(historyEntry);
+      updateHistory();
+    }
+
+    function updateHistory() {
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = history.slice(0, 5).map(entry => `
+        <div class="history-item">
+          <small>${entry.date}</small><br>
+          ${currencySymbols[entry.currency]} ${entry.gross.toFixed(2)} 
+          → Tax: ${currencySymbols[entry.currency]}${entry.tax.toFixed(2)} 
+          → Net: ${currencySymbols[entry.currency]}${entry.net.toFixed(2)}
+        </div>
+      `).join('');
+    }
+
+    function resetForm() {
+      document.getElementById('amount').value = '';
+      document.getElementById('tax').value = '';
+      document.getElementById('currency').value = 'INR';
+      document.getElementById('grossAmount').textContent = '-';
+      document.getElementById('taxAmount').textContent = '-';
+      document.getElementById('netAmount').innerHTML = '<strong>-</strong>';
+      history = [];
+      updateHistory();
+      updateCurrencySymbol();
+    }
+
+    // Initialize floating background elements
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.querySelector('.container');
+      container.addEventListener('mousemove', (e) => {
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+        container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      });
+      container.addEventListener('mouseleave', () => {
+        container.style.transform = 'rotateY(0) rotateX(0)';
+      });
+    });
+  </script>
+</body>
+</html>
